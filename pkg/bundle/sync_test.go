@@ -45,6 +45,9 @@ func Test_syncTarget(t *testing.T) {
 		key        = "key"
 		data       = dummy.TestCertificate1
 	)
+    var (
+        baseLabels = map[string]string{"propagate.hnc.x-k8s.io/none": "true"}
+    )
 
 	labelEverything := func(*testing.T) labels.Selector {
 		return labels.Everything()
@@ -79,7 +82,7 @@ func Test_syncTarget(t *testing.T) {
 		},
 		"if object exists with data but no owner, expect update": {
 			object: &corev1.ConfigMap{
-				ObjectMeta: metav1.ObjectMeta{Name: bundleName, Namespace: "test-namespace"},
+				ObjectMeta: metav1.ObjectMeta{Name: bundleName, Labels: baseLabels, Namespace: "test-namespace"},
 				Data:       map[string]string{key: data},
 			},
 			namespace:         corev1.Namespace{ObjectMeta: metav1.ObjectMeta{Name: "test-namespace"}},
@@ -93,6 +96,7 @@ func Test_syncTarget(t *testing.T) {
 				ObjectMeta: metav1.ObjectMeta{
 					Name:      bundleName,
 					Namespace: "test-namespace",
+                    Labels: baseLabels,
 					OwnerReferences: []metav1.OwnerReference{
 						{
 							Kind:               "Bundle",
@@ -115,6 +119,7 @@ func Test_syncTarget(t *testing.T) {
 				ObjectMeta: metav1.ObjectMeta{
 					Name:      bundleName,
 					Namespace: "test-namespace",
+                    Labels: baseLabels,
 					OwnerReferences: []metav1.OwnerReference{
 						{
 							Kind:               "Bundle",
@@ -138,6 +143,7 @@ func Test_syncTarget(t *testing.T) {
 				ObjectMeta: metav1.ObjectMeta{
 					Name:      bundleName,
 					Namespace: "test-namespace",
+                    Labels: baseLabels,
 					OwnerReferences: []metav1.OwnerReference{
 						{
 							Kind:               "Bundle",
@@ -156,11 +162,35 @@ func Test_syncTarget(t *testing.T) {
 			expOwnerReference: true,
 			expNeedsUpdate:    true,
 		},
+		"if object exists with missing label, expect update": {
+			object: &corev1.ConfigMap{
+				ObjectMeta: metav1.ObjectMeta{
+					Name:      bundleName,
+					Namespace: "test-namespace",
+					OwnerReferences: []metav1.OwnerReference{
+						{
+							Kind:               "Bundle",
+							APIVersion:         "trust.cert-manager.io/v1alpha1",
+							Name:               bundleName,
+							Controller:         pointer.Bool(true),
+							BlockOwnerDeletion: pointer.Bool(true),
+						},
+					},
+				},
+				Data: map[string]string{key: data},
+			},
+			namespace:         corev1.Namespace{ObjectMeta: metav1.ObjectMeta{Name: "test-namespace"}},
+			selector:          labelEverything,
+			expExists:         true,
+			expOwnerReference: true,
+			expNeedsUpdate:    true,
+		},
 		"if object exists with correct data, expect no update": {
 			object: &corev1.ConfigMap{
 				ObjectMeta: metav1.ObjectMeta{
 					Name:      bundleName,
 					Namespace: "test-namespace",
+                    Labels: baseLabels,
 					OwnerReferences: []metav1.OwnerReference{
 						{
 							Kind:               "Bundle",
@@ -184,6 +214,7 @@ func Test_syncTarget(t *testing.T) {
 				ObjectMeta: metav1.ObjectMeta{
 					Name:      bundleName,
 					Namespace: "test-namespace",
+                    Labels: baseLabels,
 					OwnerReferences: []metav1.OwnerReference{
 						{
 							Kind:               "Bundle",
@@ -244,6 +275,7 @@ func Test_syncTarget(t *testing.T) {
 				ObjectMeta: metav1.ObjectMeta{
 					Name:      bundleName,
 					Namespace: "test-namespace",
+                    Labels: baseLabels,
 					OwnerReferences: []metav1.OwnerReference{
 						{
 							Kind:               "Bundle",
@@ -274,6 +306,7 @@ func Test_syncTarget(t *testing.T) {
 				ObjectMeta: metav1.ObjectMeta{
 					Name:      bundleName,
 					Namespace: "test-namespace",
+                    Labels: baseLabels,
 					OwnerReferences: []metav1.OwnerReference{
 						{
 							Kind:               "Bundle",
@@ -380,6 +413,9 @@ func Test_syncSecretTarget(t *testing.T) {
 		key        = "key"
 		data       = dummy.TestCertificate1
 	)
+    var (
+        baseLabels = map[string]string{"propagate.hnc.x-k8s.io/none": "true"}
+    )
 
 	labelEverything := func(*testing.T) labels.Selector {
 		return labels.Everything()
@@ -450,6 +486,7 @@ func Test_syncSecretTarget(t *testing.T) {
 				ObjectMeta: metav1.ObjectMeta{
 					Name:      bundleName,
 					Namespace: "test-namespace",
+                    Labels: baseLabels,
 					OwnerReferences: []metav1.OwnerReference{
 						{
 							Kind:               "Bundle",
@@ -473,6 +510,7 @@ func Test_syncSecretTarget(t *testing.T) {
 				ObjectMeta: metav1.ObjectMeta{
 					Name:      bundleName,
 					Namespace: "test-namespace",
+                    Labels: baseLabels,
 					OwnerReferences: []metav1.OwnerReference{
 						{
 							Kind:               "Bundle",
@@ -491,11 +529,35 @@ func Test_syncSecretTarget(t *testing.T) {
 			expOwnerReference: true,
 			expNeedsUpdate:    true,
 		},
+		"if object exists with missing label, expect update": {
+			object: &corev1.Secret{
+				ObjectMeta: metav1.ObjectMeta{
+					Name:      bundleName,
+					Namespace: "test-namespace",
+					OwnerReferences: []metav1.OwnerReference{
+						{
+							Kind:               "Bundle",
+							APIVersion:         "trust.cert-manager.io/v1alpha1",
+							Name:               bundleName,
+							Controller:         pointer.Bool(true),
+							BlockOwnerDeletion: pointer.Bool(true),
+						},
+					},
+				},
+				Data: map[string][]byte{key: []byte(data)},
+			},
+			namespace:         corev1.Namespace{ObjectMeta: metav1.ObjectMeta{Name: "test-namespace"}},
+			selector:          labelEverything,
+			expExists:         true,
+			expOwnerReference: true,
+			expNeedsUpdate:    true,
+		},
 		"if object exists with correct data, expect no update": {
 			object: &corev1.Secret{
 				ObjectMeta: metav1.ObjectMeta{
 					Name:      bundleName,
 					Namespace: "test-namespace",
+                    Labels: baseLabels,
 					OwnerReferences: []metav1.OwnerReference{
 						{
 							Kind:               "Bundle",
@@ -519,6 +581,7 @@ func Test_syncSecretTarget(t *testing.T) {
 				ObjectMeta: metav1.ObjectMeta{
 					Name:      bundleName,
 					Namespace: "test-namespace",
+                    Labels: baseLabels,
 					OwnerReferences: []metav1.OwnerReference{
 						{
 							Kind:               "Bundle",
@@ -579,6 +642,7 @@ func Test_syncSecretTarget(t *testing.T) {
 				ObjectMeta: metav1.ObjectMeta{
 					Name:      bundleName,
 					Namespace: "test-namespace",
+                    Labels: baseLabels,
 					OwnerReferences: []metav1.OwnerReference{
 						{
 							Kind:               "Bundle",
@@ -609,6 +673,7 @@ func Test_syncSecretTarget(t *testing.T) {
 				ObjectMeta: metav1.ObjectMeta{
 					Name:      bundleName,
 					Namespace: "test-namespace",
+                    Labels: baseLabels,
 					OwnerReferences: []metav1.OwnerReference{
 						{
 							Kind:               "Bundle",

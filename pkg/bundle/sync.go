@@ -176,6 +176,9 @@ func (b *bundle) syncTarget(ctx context.Context, log logr.Logger,
 			ObjectMeta: metav1.ObjectMeta{
 				Name:            bundle.Name,
 				Namespace:       namespace.Name,
+                Labels:          map[string]string{
+                    "propagate.hnc.x-k8s.io/none": "true",
+                },
 				OwnerReferences: []metav1.OwnerReference{*metav1.NewControllerRef(bundle, trustapi.SchemeGroupVersion.WithKind("Bundle"))},
 			},
 			Data: map[string]string{
@@ -209,6 +212,15 @@ func (b *bundle) syncTarget(ctx context.Context, log logr.Logger,
 		configMap.OwnerReferences = append(configMap.OwnerReferences, *metav1.NewControllerRef(bundle, trustapi.SchemeGroupVersion.WithKind("Bundle")))
 		needsUpdate = true
 	}
+
+    value, ok := configMap.ObjectMeta.Labels["propagate.hnc.x-k8s.io/none"]
+    if !ok {
+        configMap.ObjectMeta.Labels = map[string]string{"propagate.hnc.x-k8s.io/none": "true"}
+        needsUpdate = true
+    } else if value != "true" {
+        configMap.ObjectMeta.Labels["propagate.hnc.x-k8s.io/none"] = "true"
+        needsUpdate = true
+    }
 
 	// Match, return do nothing
 	if cmdata, ok2 := configMap.Data[target.ConfigMap.Key]; !ok2 || cmdata != data {
@@ -268,6 +280,9 @@ func (b *bundle) syncSecretTarget(ctx context.Context, log logr.Logger,
             ObjectMeta: metav1.ObjectMeta{
                 Name:           bundle.Name,
                 Namespace:      namespace.Name,
+                Labels:          map[string]string{
+                    "propagate.hnc.x-k8s.io/none": "true",
+                },
                 OwnerReferences: []metav1.OwnerReference{*metav1.NewControllerRef(bundle, trustapi.SchemeGroupVersion.WithKind("Bundle"))},
             },
             Type: "Opaque",
@@ -298,6 +313,15 @@ func (b *bundle) syncSecretTarget(ctx context.Context, log logr.Logger,
 		secret.OwnerReferences = append(secret.OwnerReferences, *metav1.NewControllerRef(bundle, trustapi.SchemeGroupVersion.WithKind("Bundle")))
 		needsUpdate = true
 	}
+
+    value, ok := secret.ObjectMeta.Labels["propagate.hnc.x-k8s.io/none"]
+    if !ok {
+        secret.ObjectMeta.Labels = map[string]string{"propagate.hnc.x-k8s.io/none": "true"}
+        needsUpdate = true
+    } else if value != "true" {
+        secret.ObjectMeta.Labels["propagate.hnc.x-k8s.io/none"] = "true"
+        needsUpdate = true
+    }
 
 	// Match, return do nothing
 	if cmdata, ok := secret.Data[target.Secret.Key]; !ok || bytes.Compare(cmdata, data) != 0 {

@@ -98,6 +98,8 @@ func Test_Reconcile(t *testing.T) {
 
 		baseBundleOwnerRef = []metav1.OwnerReference{*metav1.NewControllerRef(baseBundle, trustapi.SchemeGroupVersion.WithKind("Bundle"))}
 
+        baseLabels = map[string]string{"propagate.hnc.x-k8s.io/none":"true"}
+
 		namespaces = []runtime.Object{
 			&corev1.Namespace{TypeMeta: metav1.TypeMeta{Kind: "Namespace", APIVersion: "v1"}, ObjectMeta: metav1.ObjectMeta{Name: trustNamespace}},
 			&corev1.Namespace{TypeMeta: metav1.TypeMeta{Kind: "Namespace", APIVersion: "v1"}, ObjectMeta: metav1.ObjectMeta{Name: "ns-1"}},
@@ -281,17 +283,17 @@ func Test_Reconcile(t *testing.T) {
 				),
 				&corev1.ConfigMap{
 					TypeMeta:   metav1.TypeMeta{Kind: "ConfigMap", APIVersion: "v1"},
-					ObjectMeta: metav1.ObjectMeta{Namespace: trustNamespace, Name: baseBundle.Name, OwnerReferences: baseBundleOwnerRef, ResourceVersion: "1"},
+					ObjectMeta: metav1.ObjectMeta{Namespace: trustNamespace, Name: baseBundle.Name, Labels: baseLabels, OwnerReferences: baseBundleOwnerRef, ResourceVersion: "1"},
 					Data:       map[string]string{targetKey: dummy.DefaultJoinedCerts()},
 				},
 				&corev1.ConfigMap{
 					TypeMeta:   metav1.TypeMeta{Kind: "ConfigMap", APIVersion: "v1"},
-					ObjectMeta: metav1.ObjectMeta{Namespace: "ns-1", Name: baseBundle.Name, OwnerReferences: baseBundleOwnerRef, ResourceVersion: "1"},
+					ObjectMeta: metav1.ObjectMeta{Namespace: "ns-1", Name: baseBundle.Name, Labels: baseLabels, OwnerReferences: baseBundleOwnerRef, ResourceVersion: "1"},
 					Data:       map[string]string{targetKey: dummy.DefaultJoinedCerts()},
 				},
 				&corev1.ConfigMap{
 					TypeMeta:   metav1.TypeMeta{Kind: "ConfigMap", APIVersion: "v1"},
-					ObjectMeta: metav1.ObjectMeta{Namespace: "ns-2", Name: baseBundle.Name, OwnerReferences: baseBundleOwnerRef, ResourceVersion: "1"},
+					ObjectMeta: metav1.ObjectMeta{Namespace: "ns-2", Name: baseBundle.Name, Labels: baseLabels, OwnerReferences: baseBundleOwnerRef, ResourceVersion: "1"},
 					Data:       map[string]string{targetKey: dummy.DefaultJoinedCerts()},
 				},
 			),
@@ -324,17 +326,17 @@ func Test_Reconcile(t *testing.T) {
 				),
 				&corev1.ConfigMap{
 					TypeMeta:   metav1.TypeMeta{Kind: "ConfigMap", APIVersion: "v1"},
-					ObjectMeta: metav1.ObjectMeta{Namespace: trustNamespace, Name: baseBundle.Name, OwnerReferences: baseBundleOwnerRef, ResourceVersion: "1"},
+					ObjectMeta: metav1.ObjectMeta{Namespace: trustNamespace, Name: baseBundle.Name, Labels: baseLabels, OwnerReferences: baseBundleOwnerRef, ResourceVersion: "1"},
 					Data:       map[string]string{targetKey: dummy.DefaultJoinedCerts()},
 				},
 				&corev1.ConfigMap{
 					TypeMeta:   metav1.TypeMeta{Kind: "ConfigMap", APIVersion: "v1"},
-					ObjectMeta: metav1.ObjectMeta{Namespace: "ns-1", Name: baseBundle.Name, OwnerReferences: baseBundleOwnerRef, ResourceVersion: "1"},
+					ObjectMeta: metav1.ObjectMeta{Namespace: "ns-1", Name: baseBundle.Name, Labels: baseLabels, OwnerReferences: baseBundleOwnerRef, ResourceVersion: "1"},
 					Data:       map[string]string{targetKey: dummy.DefaultJoinedCerts()},
 				},
 				&corev1.ConfigMap{
 					TypeMeta:   metav1.TypeMeta{Kind: "ConfigMap", APIVersion: "v1"},
-					ObjectMeta: metav1.ObjectMeta{Namespace: "ns-2", Name: baseBundle.Name, OwnerReferences: baseBundleOwnerRef, ResourceVersion: "1"},
+					ObjectMeta: metav1.ObjectMeta{Namespace: "ns-2", Name: baseBundle.Name, Labels: baseLabels, OwnerReferences: baseBundleOwnerRef, ResourceVersion: "1"},
 					Data:       map[string]string{targetKey: dummy.DefaultJoinedCerts()},
 				},
 			),
@@ -384,12 +386,12 @@ func Test_Reconcile(t *testing.T) {
 				),
 				&corev1.ConfigMap{
 					TypeMeta:   metav1.TypeMeta{Kind: "ConfigMap", APIVersion: "v1"},
-					ObjectMeta: metav1.ObjectMeta{Namespace: "random-namespace", Name: baseBundle.Name, OwnerReferences: baseBundleOwnerRef, ResourceVersion: "1"},
+					ObjectMeta: metav1.ObjectMeta{Namespace: "random-namespace", Name: baseBundle.Name, Labels: baseLabels, OwnerReferences: baseBundleOwnerRef, ResourceVersion: "1"},
 					Data:       map[string]string{targetKey: dummy.DefaultJoinedCerts()},
 				},
 				&corev1.ConfigMap{
 					TypeMeta:   metav1.TypeMeta{Kind: "ConfigMap", APIVersion: "v1"},
-					ObjectMeta: metav1.ObjectMeta{Namespace: "another-random-namespace", Name: baseBundle.Name, OwnerReferences: baseBundleOwnerRef, ResourceVersion: "1"},
+					ObjectMeta: metav1.ObjectMeta{Namespace: "another-random-namespace", Name: baseBundle.Name, Labels: baseLabels, OwnerReferences: baseBundleOwnerRef, ResourceVersion: "1"},
 					Data:       map[string]string{targetKey: dummy.DefaultJoinedCerts()},
 				},
 			),
@@ -401,17 +403,17 @@ func Test_Reconcile(t *testing.T) {
 			),
 				&corev1.ConfigMap{
 					TypeMeta:   metav1.TypeMeta{Kind: "ConfigMap", APIVersion: "v1"},
-					ObjectMeta: metav1.ObjectMeta{Namespace: trustNamespace, Name: baseBundle.Name, OwnerReferences: baseBundleOwnerRef, ResourceVersion: "1"},
+					ObjectMeta: metav1.ObjectMeta{Namespace: trustNamespace, Name: baseBundle.Name, Labels: baseLabels, OwnerReferences: baseBundleOwnerRef, ResourceVersion: "1"},
 					Data:       map[string]string{targetKey: dummy.DefaultJoinedCerts()},
 				},
 				&corev1.ConfigMap{
 					TypeMeta:   metav1.TypeMeta{Kind: "ConfigMap", APIVersion: "v1"},
-					ObjectMeta: metav1.ObjectMeta{Namespace: "ns-1", Name: baseBundle.Name, OwnerReferences: baseBundleOwnerRef, ResourceVersion: "1"},
+					ObjectMeta: metav1.ObjectMeta{Namespace: "ns-1", Name: baseBundle.Name, Labels: baseLabels, OwnerReferences: baseBundleOwnerRef, ResourceVersion: "1"},
 					Data:       map[string]string{targetKey: dummy.DefaultJoinedCerts()},
 				},
 				&corev1.ConfigMap{
 					TypeMeta:   metav1.TypeMeta{Kind: "ConfigMap", APIVersion: "v1"},
-					ObjectMeta: metav1.ObjectMeta{Namespace: "ns-2", Name: baseBundle.Name, OwnerReferences: baseBundleOwnerRef, ResourceVersion: "1"},
+					ObjectMeta: metav1.ObjectMeta{Namespace: "ns-2", Name: baseBundle.Name, Labels: baseLabels, OwnerReferences: baseBundleOwnerRef, ResourceVersion: "1"},
 					Data:       map[string]string{targetKey: dummy.DefaultJoinedCerts()},
 				},
 			),
@@ -461,15 +463,15 @@ func Test_Reconcile(t *testing.T) {
 					}),
 				),
 				&corev1.ConfigMap{
-					ObjectMeta: metav1.ObjectMeta{Namespace: trustNamespace, Name: baseBundle.Name},
+					ObjectMeta: metav1.ObjectMeta{Namespace: trustNamespace, Labels: baseLabels, Name: baseBundle.Name},
 					Data:       map[string]string{targetKey: dummy.DefaultJoinedCerts()},
 				},
 				&corev1.ConfigMap{
-					ObjectMeta: metav1.ObjectMeta{Namespace: "ns-1", Name: baseBundle.Name},
+					ObjectMeta: metav1.ObjectMeta{Namespace: "ns-1", Labels: baseLabels, Name: baseBundle.Name},
 					Data:       map[string]string{targetKey: dummy.DefaultJoinedCerts()},
 				},
 				&corev1.ConfigMap{
-					ObjectMeta: metav1.ObjectMeta{Namespace: "ns-2", Name: baseBundle.Name},
+					ObjectMeta: metav1.ObjectMeta{Namespace: "ns-2", Labels: baseLabels, Name: baseBundle.Name},
 					Data:       map[string]string{targetKey: dummy.DefaultJoinedCerts()},
 				},
 			),
@@ -494,17 +496,17 @@ func Test_Reconcile(t *testing.T) {
 				),
 				&corev1.ConfigMap{
 					TypeMeta:   metav1.TypeMeta{Kind: "ConfigMap", APIVersion: "v1"},
-					ObjectMeta: metav1.ObjectMeta{Namespace: trustNamespace, Name: baseBundle.Name, OwnerReferences: baseBundleOwnerRef, ResourceVersion: "1000"},
+					ObjectMeta: metav1.ObjectMeta{Namespace: trustNamespace, Name: baseBundle.Name, Labels: baseLabels, OwnerReferences: baseBundleOwnerRef, ResourceVersion: "1000"},
 					Data:       map[string]string{targetKey: dummy.DefaultJoinedCerts()},
 				},
 				&corev1.ConfigMap{
 					TypeMeta:   metav1.TypeMeta{Kind: "ConfigMap", APIVersion: "v1"},
-					ObjectMeta: metav1.ObjectMeta{Namespace: "ns-1", Name: baseBundle.Name, OwnerReferences: baseBundleOwnerRef, ResourceVersion: "1000"},
+					ObjectMeta: metav1.ObjectMeta{Namespace: "ns-1", Name: baseBundle.Name, Labels: baseLabels, OwnerReferences: baseBundleOwnerRef, ResourceVersion: "1000"},
 					Data:       map[string]string{targetKey: dummy.DefaultJoinedCerts()},
 				},
 				&corev1.ConfigMap{
 					TypeMeta:   metav1.TypeMeta{Kind: "ConfigMap", APIVersion: "v1"},
-					ObjectMeta: metav1.ObjectMeta{Namespace: "ns-2", Name: baseBundle.Name, OwnerReferences: baseBundleOwnerRef, ResourceVersion: "1000"},
+					ObjectMeta: metav1.ObjectMeta{Namespace: "ns-2", Name: baseBundle.Name, Labels: baseLabels, OwnerReferences: baseBundleOwnerRef, ResourceVersion: "1000"},
 					Data:       map[string]string{targetKey: dummy.DefaultJoinedCerts()},
 				},
 			),
@@ -514,17 +516,17 @@ func Test_Reconcile(t *testing.T) {
 			existingObjects: append(namespaces, sourceConfigMap, sourceSecret, gen.BundleFrom(baseBundle),
 				&corev1.ConfigMap{
 					TypeMeta:   metav1.TypeMeta{Kind: "ConfigMap", APIVersion: "v1"},
-					ObjectMeta: metav1.ObjectMeta{Namespace: trustNamespace, Name: baseBundle.Name, OwnerReferences: baseBundleOwnerRef},
+					ObjectMeta: metav1.ObjectMeta{Namespace: trustNamespace, Name: baseBundle.Name, Labels: baseLabels, OwnerReferences: baseBundleOwnerRef},
 					Data:       map[string]string{targetKey: dummy.DefaultJoinedCerts()},
 				},
 				&corev1.ConfigMap{
 					TypeMeta:   metav1.TypeMeta{Kind: "ConfigMap", APIVersion: "v1"},
-					ObjectMeta: metav1.ObjectMeta{Namespace: "ns-1", Name: baseBundle.Name, OwnerReferences: baseBundleOwnerRef},
+					ObjectMeta: metav1.ObjectMeta{Namespace: "ns-1", Name: baseBundle.Name, Labels: baseLabels, OwnerReferences: baseBundleOwnerRef},
 					Data:       map[string]string{targetKey: dummy.DefaultJoinedCerts()},
 				},
 				&corev1.ConfigMap{
 					TypeMeta:   metav1.TypeMeta{Kind: "ConfigMap", APIVersion: "v1"},
-					ObjectMeta: metav1.ObjectMeta{Namespace: "ns-2", Name: baseBundle.Name, OwnerReferences: baseBundleOwnerRef},
+					ObjectMeta: metav1.ObjectMeta{Namespace: "ns-2", Name: baseBundle.Name, Labels: baseLabels, OwnerReferences: baseBundleOwnerRef},
 					Data:       map[string]string{targetKey: dummy.DefaultJoinedCerts()},
 				},
 			),
@@ -549,17 +551,17 @@ func Test_Reconcile(t *testing.T) {
 				),
 				&corev1.ConfigMap{
 					TypeMeta:   metav1.TypeMeta{Kind: "ConfigMap", APIVersion: "v1"},
-					ObjectMeta: metav1.ObjectMeta{Namespace: trustNamespace, Name: baseBundle.Name, OwnerReferences: baseBundleOwnerRef, ResourceVersion: "999"},
+					ObjectMeta: metav1.ObjectMeta{Namespace: trustNamespace, Name: baseBundle.Name, Labels: baseLabels, OwnerReferences: baseBundleOwnerRef, ResourceVersion: "999"},
 					Data:       map[string]string{targetKey: dummy.DefaultJoinedCerts()},
 				},
 				&corev1.ConfigMap{
 					TypeMeta:   metav1.TypeMeta{Kind: "ConfigMap", APIVersion: "v1"},
-					ObjectMeta: metav1.ObjectMeta{Namespace: "ns-1", Name: baseBundle.Name, OwnerReferences: baseBundleOwnerRef, ResourceVersion: "999"},
+					ObjectMeta: metav1.ObjectMeta{Namespace: "ns-1", Name: baseBundle.Name, Labels: baseLabels, OwnerReferences: baseBundleOwnerRef, ResourceVersion: "999"},
 					Data:       map[string]string{targetKey: dummy.DefaultJoinedCerts()},
 				},
 				&corev1.ConfigMap{
 					TypeMeta:   metav1.TypeMeta{Kind: "ConfigMap", APIVersion: "v1"},
-					ObjectMeta: metav1.ObjectMeta{Namespace: "ns-2", Name: baseBundle.Name, OwnerReferences: baseBundleOwnerRef, ResourceVersion: "999"},
+					ObjectMeta: metav1.ObjectMeta{Namespace: "ns-2", Name: baseBundle.Name, Labels: baseLabels, OwnerReferences: baseBundleOwnerRef, ResourceVersion: "999"},
 					Data:       map[string]string{targetKey: dummy.DefaultJoinedCerts()},
 				},
 			),
@@ -583,15 +585,15 @@ func Test_Reconcile(t *testing.T) {
 					}),
 				),
 				&corev1.ConfigMap{
-					ObjectMeta: metav1.ObjectMeta{Namespace: trustNamespace, Name: baseBundle.Name, OwnerReferences: baseBundleOwnerRef},
+					ObjectMeta: metav1.ObjectMeta{Namespace: trustNamespace, Name: baseBundle.Name, Labels: baseLabels, OwnerReferences: baseBundleOwnerRef},
 					Data:       map[string]string{targetKey: dummy.DefaultJoinedCerts()},
 				},
 				&corev1.ConfigMap{
-					ObjectMeta: metav1.ObjectMeta{Namespace: "ns-1", Name: baseBundle.Name, OwnerReferences: baseBundleOwnerRef},
+					ObjectMeta: metav1.ObjectMeta{Namespace: "ns-1", Name: baseBundle.Name, Labels: baseLabels, OwnerReferences: baseBundleOwnerRef},
 					Data:       map[string]string{targetKey: dummy.DefaultJoinedCerts()},
 				},
 				&corev1.ConfigMap{
-					ObjectMeta: metav1.ObjectMeta{Namespace: "ns-2", Name: baseBundle.Name, OwnerReferences: baseBundleOwnerRef},
+					ObjectMeta: metav1.ObjectMeta{Namespace: "ns-2", Name: baseBundle.Name, Labels: baseLabels, OwnerReferences: baseBundleOwnerRef},
 					Data:       map[string]string{targetKey: dummy.DefaultJoinedCerts()},
 				},
 			),
@@ -616,17 +618,17 @@ func Test_Reconcile(t *testing.T) {
 				),
 				&corev1.ConfigMap{
 					TypeMeta:   metav1.TypeMeta{Kind: "ConfigMap", APIVersion: "v1"},
-					ObjectMeta: metav1.ObjectMeta{Namespace: trustNamespace, Name: baseBundle.Name, OwnerReferences: baseBundleOwnerRef, ResourceVersion: "999"},
+					ObjectMeta: metav1.ObjectMeta{Namespace: trustNamespace, Name: baseBundle.Name, Labels: baseLabels, OwnerReferences: baseBundleOwnerRef, ResourceVersion: "999"},
 					Data:       map[string]string{targetKey: dummy.DefaultJoinedCerts()},
 				},
 				&corev1.ConfigMap{
 					TypeMeta:   metav1.TypeMeta{Kind: "ConfigMap", APIVersion: "v1"},
-					ObjectMeta: metav1.ObjectMeta{Namespace: "ns-1", Name: baseBundle.Name, OwnerReferences: baseBundleOwnerRef, ResourceVersion: "999"},
+					ObjectMeta: metav1.ObjectMeta{Namespace: "ns-1", Name: baseBundle.Name, Labels: baseLabels, OwnerReferences: baseBundleOwnerRef, ResourceVersion: "999"},
 					Data:       map[string]string{targetKey: dummy.DefaultJoinedCerts()},
 				},
 				&corev1.ConfigMap{
 					TypeMeta:   metav1.TypeMeta{Kind: "ConfigMap", APIVersion: "v1"},
-					ObjectMeta: metav1.ObjectMeta{Namespace: "ns-2", Name: baseBundle.Name, OwnerReferences: baseBundleOwnerRef, ResourceVersion: "999"},
+					ObjectMeta: metav1.ObjectMeta{Namespace: "ns-2", Name: baseBundle.Name, Labels: baseLabels, OwnerReferences: baseBundleOwnerRef, ResourceVersion: "999"},
 					Data:       map[string]string{targetKey: dummy.DefaultJoinedCerts()},
 				},
 			),
@@ -674,15 +676,15 @@ func Test_Reconcile(t *testing.T) {
 					}),
 				),
 				&corev1.ConfigMap{
-					ObjectMeta: metav1.ObjectMeta{Namespace: trustNamespace, Name: baseBundle.Name, OwnerReferences: baseBundleOwnerRef},
+					ObjectMeta: metav1.ObjectMeta{Namespace: trustNamespace, Name: baseBundle.Name, Labels: baseLabels, OwnerReferences: baseBundleOwnerRef},
 					Data:       map[string]string{targetKey: dummy.DefaultJoinedCerts()},
 				},
 				&corev1.ConfigMap{
-					ObjectMeta: metav1.ObjectMeta{Namespace: "ns-1", Name: baseBundle.Name, OwnerReferences: baseBundleOwnerRef},
+					ObjectMeta: metav1.ObjectMeta{Namespace: "ns-1", Name: baseBundle.Name, Labels: baseLabels, OwnerReferences: baseBundleOwnerRef},
 					Data:       map[string]string{targetKey: dummy.DefaultJoinedCerts()},
 				},
 				&corev1.ConfigMap{
-					ObjectMeta: metav1.ObjectMeta{Namespace: "ns-2", Name: baseBundle.Name, OwnerReferences: baseBundleOwnerRef},
+					ObjectMeta: metav1.ObjectMeta{Namespace: "ns-2", Name: baseBundle.Name, Labels: baseLabels, OwnerReferences: baseBundleOwnerRef},
 					Data:       map[string]string{targetKey: dummy.DefaultJoinedCerts()},
 				},
 			),
@@ -710,17 +712,17 @@ func Test_Reconcile(t *testing.T) {
 				),
 				&corev1.ConfigMap{
 					TypeMeta:   metav1.TypeMeta{Kind: "ConfigMap", APIVersion: "v1"},
-					ObjectMeta: metav1.ObjectMeta{Namespace: trustNamespace, Name: baseBundle.Name, OwnerReferences: baseBundleOwnerRef, ResourceVersion: "1000"},
+					ObjectMeta: metav1.ObjectMeta{Namespace: trustNamespace, Name: baseBundle.Name, Labels: baseLabels, OwnerReferences: baseBundleOwnerRef, ResourceVersion: "1000"},
 					Data:       map[string]string{targetKey: dummy.JoinCerts(dummy.TestCertificate1, dummy.TestCertificate2, dummy.TestCertificate3, dummy.TestCertificate5)},
 				},
 				&corev1.ConfigMap{
 					TypeMeta:   metav1.TypeMeta{Kind: "ConfigMap", APIVersion: "v1"},
-					ObjectMeta: metav1.ObjectMeta{Namespace: "ns-1", Name: baseBundle.Name, OwnerReferences: baseBundleOwnerRef, ResourceVersion: "1000"},
+					ObjectMeta: metav1.ObjectMeta{Namespace: "ns-1", Name: baseBundle.Name, Labels: baseLabels, OwnerReferences: baseBundleOwnerRef, ResourceVersion: "1000"},
 					Data:       map[string]string{targetKey: dummy.JoinCerts(dummy.TestCertificate1, dummy.TestCertificate2, dummy.TestCertificate3, dummy.TestCertificate5)},
 				},
 				&corev1.ConfigMap{
 					TypeMeta:   metav1.TypeMeta{Kind: "ConfigMap", APIVersion: "v1"},
-					ObjectMeta: metav1.ObjectMeta{Namespace: "ns-2", Name: baseBundle.Name, OwnerReferences: baseBundleOwnerRef, ResourceVersion: "1000"},
+					ObjectMeta: metav1.ObjectMeta{Namespace: "ns-2", Name: baseBundle.Name, Labels: baseLabels, OwnerReferences: baseBundleOwnerRef, ResourceVersion: "1000"},
 					Data:       map[string]string{targetKey: dummy.JoinCerts(dummy.TestCertificate1, dummy.TestCertificate2, dummy.TestCertificate3, dummy.TestCertificate5)},
 				},
 			),
@@ -745,15 +747,15 @@ func Test_Reconcile(t *testing.T) {
 					}),
 				),
 				&corev1.ConfigMap{
-					ObjectMeta: metav1.ObjectMeta{Namespace: trustNamespace, Name: baseBundle.Name, OwnerReferences: baseBundleOwnerRef},
+					ObjectMeta: metav1.ObjectMeta{Namespace: trustNamespace, Name: baseBundle.Name, Labels: baseLabels, OwnerReferences: baseBundleOwnerRef},
 					Data:       map[string]string{targetKey: dummy.JoinCerts(dummy.TestCertificate1, dummy.TestCertificate2, dummy.TestCertificate3, dummy.TestCertificate5)},
 				},
 				&corev1.ConfigMap{
-					ObjectMeta: metav1.ObjectMeta{Namespace: "ns-1", Name: baseBundle.Name, OwnerReferences: baseBundleOwnerRef},
+					ObjectMeta: metav1.ObjectMeta{Namespace: "ns-1", Name: baseBundle.Name, Labels: baseLabels, OwnerReferences: baseBundleOwnerRef},
 					Data:       map[string]string{targetKey: dummy.JoinCerts(dummy.TestCertificate1, dummy.TestCertificate2, dummy.TestCertificate3, dummy.TestCertificate5)},
 				},
 				&corev1.ConfigMap{
-					ObjectMeta: metav1.ObjectMeta{Namespace: "ns-2", Name: baseBundle.Name, OwnerReferences: baseBundleOwnerRef},
+					ObjectMeta: metav1.ObjectMeta{Namespace: "ns-2", Name: baseBundle.Name, Labels: baseLabels, OwnerReferences: baseBundleOwnerRef},
 					Data:       map[string]string{targetKey: dummy.JoinCerts(dummy.TestCertificate1, dummy.TestCertificate2, dummy.TestCertificate3, dummy.TestCertificate5)},
 				},
 			),
@@ -780,17 +782,17 @@ func Test_Reconcile(t *testing.T) {
 				),
 				&corev1.ConfigMap{
 					TypeMeta:   metav1.TypeMeta{Kind: "ConfigMap", APIVersion: "v1"},
-					ObjectMeta: metav1.ObjectMeta{Namespace: trustNamespace, Name: baseBundle.Name, OwnerReferences: baseBundleOwnerRef, ResourceVersion: "1000"},
+					ObjectMeta: metav1.ObjectMeta{Namespace: trustNamespace, Name: baseBundle.Name, Labels: baseLabels, OwnerReferences: baseBundleOwnerRef, ResourceVersion: "1000"},
 					Data:       map[string]string{targetKey: dummy.DefaultJoinedCerts()},
 				},
 				&corev1.ConfigMap{
 					TypeMeta:   metav1.TypeMeta{Kind: "ConfigMap", APIVersion: "v1"},
-					ObjectMeta: metav1.ObjectMeta{Namespace: "ns-1", Name: baseBundle.Name, OwnerReferences: baseBundleOwnerRef, ResourceVersion: "1000"},
+					ObjectMeta: metav1.ObjectMeta{Namespace: "ns-1", Name: baseBundle.Name, Labels: baseLabels, OwnerReferences: baseBundleOwnerRef, ResourceVersion: "1000"},
 					Data:       map[string]string{targetKey: dummy.DefaultJoinedCerts()},
 				},
 				&corev1.ConfigMap{
 					TypeMeta:   metav1.TypeMeta{Kind: "ConfigMap", APIVersion: "v1"},
-					ObjectMeta: metav1.ObjectMeta{Namespace: "ns-2", Name: baseBundle.Name, OwnerReferences: baseBundleOwnerRef, ResourceVersion: "1000"},
+					ObjectMeta: metav1.ObjectMeta{Namespace: "ns-2", Name: baseBundle.Name, Labels: baseLabels, OwnerReferences: baseBundleOwnerRef, ResourceVersion: "1000"},
 					Data:       map[string]string{targetKey: dummy.DefaultJoinedCerts()},
 				},
 			),
