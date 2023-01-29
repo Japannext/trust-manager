@@ -231,6 +231,14 @@ func (b *bundle) syncTarget(ctx context.Context, log logr.Logger,
 		needsUpdate = true
 	}
 
+    if target.KeyStore != nil && bundle.Status.KeyStore != nil {
+        ksData := string(bundle.Status.KeyStore)
+        if kData, ok := configMap.Data[target.KeyStore.Key]; !ok || kData != ksData {
+            configMap.Data[target.KeyStore.Key] = ksData
+            needsUpdate = true
+        }
+    }
+
 	// Exit early if no update is needed
 	if !needsUpdate {
 		return false, nil
@@ -321,6 +329,14 @@ func (b *bundle) syncSecretTarget(ctx context.Context, log logr.Logger,
     } else if value != "true" {
         secret.ObjectMeta.Labels["propagate.hnc.x-k8s.io/none"] = "true"
         needsUpdate = true
+    }
+
+    if target.KeyStore != nil && bundle.Status.KeyStore != nil {
+        ksData := bundle.Status.KeyStore
+        if kData, ok := secret.Data[target.KeyStore.Key]; !ok || bytes.Compare(kData, ksData) != 0 {
+            secret.Data[target.KeyStore.Key] = ksData
+            needsUpdate = true
+        }
     }
 
 	// Match, return do nothing

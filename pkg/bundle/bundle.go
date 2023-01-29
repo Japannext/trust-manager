@@ -187,6 +187,13 @@ func (b *bundle) Reconcile(ctx context.Context, req ctrl.Request) (ctrl.Result, 
 			continue
 		}
 
+        if bundle.Spec.Target.KeyStore != nil {
+            _, err = b.syncKeyStore(ctx, log, &bundle, []byte(resolvedBundle.data))
+            if err != nil {
+                // TODO
+            }
+        }
+
 		synced, err := b.syncTarget(ctx, log, &bundle, namespaceSelector, &namespace, resolvedBundle.data)
 		if err != nil {
 			log.Error(err, "failed sync bundle to target namespace")

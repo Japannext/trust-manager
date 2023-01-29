@@ -105,6 +105,19 @@ spec:
                         key:
                           description: Key is the key of the entry in the object's `data` field to be used.
                           type: string
+                    keystore:
+                      description: KeyStore is the key where the java keystore will be deployed. It will affect the target ConfigMap and Secret
+                      type: object
+                      required:
+                        - key
+                        - password
+                      properties:
+                        key:
+                          description: Key is the key of the entry in the object's `data` field to be used.
+                          type: string
+                        password:
+                          description: The password of the Java Keystore
+                          type: string
                     namespaceSelector:
                       description: NamespaceSelector will, if set, only sync the target resource in Namespaces which match the selector.
                       type: object
@@ -160,6 +173,10 @@ spec:
                 defaultCAVersion:
                   description: DefaultCAPackageVersion, if set and non-empty, indicates the version information which was retrieved when the set of default CAs was requested in the bundle source. This should only be set if useDefaultCAs was set to "true" on a source, and will be the same for the same version of a bundle with identical certificates.
                   type: string
+                keystore:
+                  description: The Java KeyStore to deploy to all targets.
+                  type: string
+                  format: byte
                 target:
                   description: Target is the current Target that the Bundle is attempting or has completed syncing the source data to.
                   type: object
@@ -172,6 +189,19 @@ spec:
                       properties:
                         key:
                           description: Key is the key of the entry in the object's `data` field to be used.
+                          type: string
+                    keystore:
+                      description: KeyStore is the key where the java keystore will be deployed. It will affect the target ConfigMap and Secret
+                      type: object
+                      required:
+                        - key
+                        - password
+                      properties:
+                        key:
+                          description: Key is the key of the entry in the object's `data` field to be used.
+                          type: string
+                        password:
+                          description: The password of the Java Keystore
                           type: string
                     namespaceSelector:
                       description: NamespaceSelector will, if set, only sync the target resource in Namespaces which match the selector.

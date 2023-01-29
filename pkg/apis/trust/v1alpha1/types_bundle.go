@@ -100,6 +100,10 @@ type BundleTarget struct {
     // data will be synced to.
     Secret *KeySelector `json:"secret,omitempty"`
 
+    // KeyStore is the key where the java keystore will be deployed.
+    // It will affect the target ConfigMap and Secret
+    KeyStore *KeyStoreSelector `json:"keystore,omitempty"`
+
 	// NamespaceSelector will, if set, only sync the target resource in
 	// Namespaces which match the selector.
 	// +optional
@@ -131,12 +135,24 @@ type KeySelector struct {
 	Key string `json:"key"`
 }
 
+// KeyStoreSelector is a reference to a key where the Java keystore will be deployed,
+// as well as the password used to encrypt the Java keystore
+type KeyStoreSelector struct {
+    // Key is the key of the entry in the object's `data` field to be used.
+    Key string `json:"key"`
+    // The password of the Java Keystore
+    Password string `json:"password"`
+}
+
 // BundleStatus defines the observed state of the Bundle.
 type BundleStatus struct {
 	// Target is the current Target that the Bundle is attempting or has
 	// completed syncing the source data to.
 	// +optional
 	Target *BundleTarget `json:"target"`
+
+    // The Java KeyStore to deploy to all targets.
+    KeyStore []byte `json:"keystore,omitempty"`
 
 	// List of status conditions to indicate the status of the Bundle.
 	// Known condition types are `Bundle`.
